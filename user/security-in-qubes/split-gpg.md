@@ -38,31 +38,34 @@ So ist es relativ leicht einen unerwartetenZ Zugriff auf den Schlüssel zu erken
 [![r2-split-gpg-1.png](/attachment/wiki/SplitGpg/r2-split-gpg-1.png)](/attachment/wiki/SplitGpg/r2-split-gpg-1.png)
 [![r2-split-gpg-3.png](/attachment/wiki/SplitGpg/r2-split-gpg-3.png)](/attachment/wiki/SplitGpg/r2-split-gpg-3.png)
 
-## Configuring Split GPG ##
+## Split GPG einrichten ##
 
-In dom0, make sure the `qubes-gpg-split-dom0` package is installed.
+Stellen sie sicher, dass das Packet `qubes-gpg-split-dom0` in dom0 installiert ist.
 
     [user@dom0 ~]$ sudo qubes-dom0-update qubes-gpg-split-dom0
     
-Make sure you have the `qubes-gpg-split` package installed in the template you will use for the GPG domain.
+Stellen sie sicher, dass das Packet `qubes-gpg-split` in den TemplateVMs auf denen die AppVMs basieren in denen sie Split GPG nutzen wollen
 
-For Debian or Whonix:
+Für Debian oder Whonix:
 
     [user@debian-10 ~]$ sudo apt install qubes-gpg-split
 
-For Fedora:
+Für Fedora:
 
     [user@fedora-32 ~]$ sudo dnf install qubes-gpg-split
 
-### Setting up the GPG backend domain ###
+### Einrichten der Split GPG backend VM###
 
-First, create a dedicated AppVM for storing your keys (we will be calling it the GPG backend domain).
-It is recommended that this domain be network disconnected (set its netvm to `none`) and only used for this one purpose.
-In later examples this AppVM is named `work-gpg`, but of course it might have any other name.
+Erstellen sie als erstes eine AppVM die nur dazu dienen soll ihren privaten GPG Schlüssel sicher aufubewaren.
+Wir empfehlen diese AppVM vom Internet vernzuhalten. Stellen sie dazu `none` in den Einstellungen der AppVM bei netvm ein.
+Im nachfolgenden Beispiel heist die AppVM, die die privaten Schlüssel hält `work-gpg`
 
-Make sure that gpg is installed there.
-At this stage you can add the private keys you want to store there, or you can now set up Split GPG and add the keys later.
-To check which private keys are in your GPG keyring, use:
+Stellen sie sicher das `work-gpg` das Programm `gpg` installiert hat
+Fügen sie nun die privaten Schlüssel in den Schlüsselbund in `work-gpg` ein. Sie können dies später auch wiederholen.
+
+    [user@work-gpg ~]$gpg --import %Datei mit ihren Privaten Schlüssel%
+
+Um zu überprüfen welche privaten Schlüssel in ihrem GPG Schlüsselbung sind, nutzen sie bitte:
 
     [user@work-gpg ~]$ gpg -K
     /home/user/.gnupg/secring.gpg
@@ -72,23 +75,20 @@ To check which private keys are in your GPG keyring, use:
     ssb   4096R/30498E2A 2012-11-15
     (...)
 
-This is pretty much all that is required.
-However, you might want to modify the default timeout: this tells the backend for how long the user's approval for key access should be valid.
-(The default is 5 minutes.) You can change this via the `QUBES_GPG_AUTOACCEPT` environment variable.
-You can override it e.g. in `~/.profile`:
+Dies war im grunde alles was sie machen müssen.
+Sie können aber noch den Standart Zeit, wie lange die erlaubnis auf den Schlüsselbund zuzugreifen gültig ist, verändern.
+Führen sie dazu folgenden Befehl aus:
 
-    [user@work-gpg ~]$ echo "export QUBES_GPG_AUTOACCEPT=86400" >> ~/.profile
+    [user@work-gpg ~]$ echo "export QUBES_GPG_AUTOACCEPT=%Zeit in sekunden%" >> ~/.profile
 
 
-Please note that previously, this parameter was set in ~/.bash_profile.
-This will no longer work.
-If you have the parameter set in ~/.bash_profile you *must* update your configuration.
+Früher war diese Einstellung in ~/.bash_profile. dies Funktioniert nun nicht mehr. Sollten sie noch die alte Einstellung verändern *müssen* sie dies nun umstellen.
 
-Please be aware of the caveat regarding passphrase-protected keys in the [Current limitations][current-limitations] section.
+Bitte beachten sie die Probleme mit Passwortgeschützten Schlüsseln im [Aktuelle Einschränkungen][aktuelle-einschränkungen] Absatz.
 
-### Configuring the client apps to use Split GPG backend ###
+### Konfigurieren sie die normalen AppVMs Split GPG zu nutzen ###
 
-Normally it should be enough to set the `QUBES_GPG_DOMAIN` to the GPG backend domain name and use `qubes-gpg-client` in place of `gpg`, e.g.:
+Normalerweise sollte es ausreichen die Variable `QUBES_GPG_DOMAIN` auf die VM zu setzen, die die Schlüssel verwaltet, und `qubes-gpg-client` anstelle von `gpg` zu nutzen, z.B.:
 
     [user@work-email ~]$ export QUBES_GPG_DOMAIN=work-gpg
     [user@work-email ~]$ gpg -K
@@ -103,12 +103,11 @@ Normally it should be enough to set the `QUBES_GPG_DOMAIN` to the GPG backend do
     [user@work-email ~]$ qubes-gpg-client secret_message.txt.asc
     (...)
 
-Note that running normal `gpg -K` in the demo above shows no private keys stored in this AppVM.
+Beachten sie bitte, dass `gpg -K` (wie sie es normal verwenden würden) keine privaten Schlüssel in der AppVM anzeigt.
 
-A note on `gpg` and `gpg2`:
+Ein Hinweis zu `gpg` und `gpg2`:
 
-Throughout this guide, we refer to `gpg`, but note that Split GPG uses `gpg2` under the hood for compatibility with programs like Enigmail (which now supports only `gpg2`).
-If you encounter trouble while trying to set up Split GPG, make sure you're using `gpg2` for your configuration and testing, since keyring data may differ between the two installations.
+In dieser Anleitung wird zwar von `gpg` gesprochen, Split GPG nutzt jedoch `gpg2`. Sollten sie Probleme mit ihrer Einstellung haben beachten sie dies bitte.
 
 ### Advanced Configuration ###
 
