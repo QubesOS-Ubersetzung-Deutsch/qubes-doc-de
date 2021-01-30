@@ -16,26 +16,24 @@ redirect_from:
 
 # Qubes Split GPG #
 
-Split GPG implements a concept similar to having a smart card with your private GPG keys, except that the role of the "smart card" is played by another Qubes AppVM.
-This way one not-so-trusted domain, e.g. the one where Thunderbird is running, can delegate all crypto operations -- such as encryption/decryption and signing -- to another, more trusted, network-isolated domain.
-This way the compromise of your domain where Thunderbird or another client app is running -- arguably a not-so-unthinkable scenario -- does not allow the attacker to automatically also steal all your keys.
-(We should make a rather obvious comment here that the so-often-used passphrases on private keys are pretty meaningless because the attacker can easily set up a simple backdoor which would wait until the user enters the passphrase and steal the key then.)
+Split GPG (also aufgeteiltes GPG) implementiert ein Konzept vergleichbar mit Smart Cards auf denen der private GPG Schlüssel liegt, nur mit dem Unterschied, das die Rolle der "Smart Card" von einer anderen Qubes AppVM übernommen wird.  
+Auf diesen Weg kann eine nicht so wirklich vertrauenswürdige AppVM, zum Beispiel die mit dem E-Mail programm, alle Ver- und Entschlüsselungsaufgaben an eine vertrauenswürdigere, vom Internet getrennte AppVM weiterleiten.  
+Dies Verhindert, das eine Kompromitierung der E-Mail VM (leider kein so abwegiges Szenario) , oder einer anderen, es den Angreifenden ermöglicht die privaten GPG Schlüssel zu stehlen.  
 
 [![split-gpg-diagram.png](/attachment/wiki/SplitGpg/split-gpg-diagram.png)](/attachment/wiki/SplitGpg/split-gpg-diagram.png)
 
-This diagram presents an overview of the Split GPG architecture.
+Dieses Diagramm liefet einen Überblick über die Architektur von Split GPG.
 
-## Advantages of Split GPG vs. traditional GPG with a smart card ##
+## Vorteile von Split GPG gegenüber der traditionellen GPG Smart Card ##
 
-It is often thought that the use of smart cards for private key storage guarantees ultimate safety.
-While this might be true (unless the attacker can find a usually-very-expensive-and-requiring-physical-presence way to extract the key from the smart card) but only with regards to the safety of the private key itself.
-However, there is usually nothing that could stop the attacker from requesting the smart card to perform decryption of all the user documents the attacker has found or need to decrypt.
-In other words, while protecting the user's private key is an important task, we should not forget that ultimately it is the user data that are to be protected and that the smart card chip has no way of knowing the requests to decrypt documents are now coming from the attacker's script and not from the user sitting in front of the monitor.
-(Similarly the smart card doesn't make the process of digitally signing a document or a transaction in any way more secure -- the user cannot know what the chip is really signing.
-Unfortunately this problem of signing reliability is not solvable by Split GPG)
+Wir denken oft, dass das Benutzen einer Smart Card ultimative Sicherheit für unsere GPG Keys liefert.
+Dies stimmt zwar (solange die Angreifenden keinen, normalerweise sehr teuren, Weg finden die Schlüssel von der Smart Card zu extrahieren) betrifft aber nur den privaten Schlüssel selbst.
+Jedoch gibt es nichts was die Angreifenden davon abhält die Smart Card dabit zu beauftragen ein Document für die Angreifenden und nicht für den Nutzenden zu entschlüsseln.
+Mit anderen Worten, den privaten Schlüssel des Nutzenden zu schützen ist wichtig, es geht aber eigentlich darum, dir Daten des Nutzenden zu schützen, was die Smart Card nicht kann, da sie nicht weiß welcher Auftrag von dem Nutzenden kommt, und welcher von den Angreifenden.
+(Genauso macht die Smart Card das Signieren eines Documentes auch nicht sicherer, da der Nutzer nicht wissen kann was wirklich Signiert wird. Leider ist dies ein Problem das momentan noch nicht von Split GPG gelöst wird.)
 
-With Qubes Split GPG this problem is drastically minimized, because each time the key is to be used the user is asked for consent (with a definable time out, 5 minutes by default), plus is always notified each time the key is used via a tray notification from the domain where GPG backend is running.
-This way it would be easy to spot unexpected requests to decrypt documents.
+Mit Split GPG ist dieses Problem jedoch erheblich verkleinert, denn der Nutzende muss den Zugriff auf den Schlüssel freigeben (Standartmäßig für 5 minuten) und wird über eine Benachrichtigung über jeden Schlüsselzugriff informiert.
+So ist es relativ leicht einen unerwartetenZ Zugriff auf den Schlüssel zu erkennen.
 
 [![r2-split-gpg-1.png](/attachment/wiki/SplitGpg/r2-split-gpg-1.png)](/attachment/wiki/SplitGpg/r2-split-gpg-1.png)
 [![r2-split-gpg-3.png](/attachment/wiki/SplitGpg/r2-split-gpg-3.png)](/attachment/wiki/SplitGpg/r2-split-gpg-3.png)
