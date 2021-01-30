@@ -136,7 +136,7 @@
 │       ├── sony-vaio-tinkering.md
 │       ├── tails-troubleshooting.md
 │       └── thinkpad-troubleshooting.md
-├── introduction
+├── introduction                              in Übersetzung durch depature.eden komplett
 │   ├── code-of-conduct.md
 │   ├── contributing.md
 │   ├── experts.md
