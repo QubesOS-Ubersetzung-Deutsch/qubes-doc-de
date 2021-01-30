@@ -246,7 +246,7 @@
     │   ├── data-leaks.md
     │   ├── device-handling-security.md
     │   ├── firewall.md
-    │   ├── split-gpg.md
+    │   ├── split-gpg.md                    in übersetzung durch spike-punk
     │   ├── u2f-proxy.md
     │   ├── vm-sudo.md
     │   └── yubi-key.md
