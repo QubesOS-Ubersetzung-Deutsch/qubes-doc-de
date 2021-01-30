@@ -3,15 +3,15 @@ layout: doc
 title: Split GPG
 permalink: /doc/split-gpg/
 redirect_from:
-- /en/doc/split-gpg/
-- /doc/SplitGpg/
-- /doc/UserDoc/SplitGpg/
-- /wiki/UserDoc/SplitGpg/
-- /doc/open-pgp/
-- /en/doc/open-pgp/
-- /doc/OpenPGP/
-- /doc/UserDoc/OpenPGP/
-- /wiki/UserDoc/OpenPGP/
+- /de/doc/split-gpg/
+- /de/doc/SplitGpg/
+- /de/doc/UserDoc/SplitGpg/
+- /de/wiki/UserDoc/SplitGpg/
+- /de/doc/open-pgp/
+- /de/doc/open-pgp/
+- /de/doc/OpenPGP/
+- /de/doc/UserDoc/OpenPGP/
+- /de/wiki/UserDoc/OpenPGP/
 ---
 
 # Qubes Split GPG #
