@@ -109,24 +109,24 @@ Ein Hinweis zu `gpg` und `gpg2`:
 
 In dieser Anleitung wird zwar von `gpg` gesprochen, Split GPG nutzt jedoch `gpg2`. Sollten sie Probleme mit ihrer Einstellung haben beachten sie dies bitte.
 
-### Advanced Configuration ###
+### Erweiterter Konfiguration ###
 
-The `qubes-gpg-client-wrapper` script sets the `QUBES_GPG_DOMAIN` variable automatically based on the content of the file `/rw/config/gpg-split-domain`, which should be set to the name of the GPG backend VM. This file survives the AppVM reboot, of course.
+Das `qubes-gpg-client-wrapper` Script setzt den Inhalt der Variable `QUBES_GPG_DOMAIN` automatisch basierend auf den Inhalt der Datei `/rw/config/gpg-split-domain`, welche den Namen der GPG backend VM enthält. Diese Datei besteht selbstverständlich auch nach einem AppVM neustart noch.
 
     [user@work-email ~]$ sudo bash
     [root@work-email ~]$ echo "work-gpg" > /rw/config/gpg-split-domain
 
-Split GPG's default qrexec policy requires the user to enter the name of the AppVM containing GPG keys on each invocation. To improve usability for applications like Thunderbird with Enigmail, in `dom0` place the following line at the top of the file `/etc/qubes-rpc/policy/qubes.Gpg`:
+Split GPGs standart qrexec Regeln erfordern vom Nutzer das eintippen des Namens der AppVM, die für das GPG backend zuständig ist, bei jedem Aufruf. Zur Verbesserung der Nutzbarkeit für Anwendungen wie Thunderbird, kann folgende Zeile in die Datei `/etc/qubes-rpc/policy/qubes.Gpg` ind `dom0` hinzugefügt werden:
 
     work-email  work-gpg  allow
 
-where `work-email` is the Thunderbird + Enigmail AppVM and `work-gpg` contains your GPG keys.
+In diesem Beispiel enthält `work-email` Thunderbird, und `work-gpg` das GPG backend mit den privaten Schlüsseln.
 
-You may also edit the qrexec policy file for Split GPG in order to tell Qubes your default gpg vm (qrexec prompts will appear with the gpg vm preselected as the target, instead of the user needing to type a name in manually). To do this, append `,default_target=<vmname>` to `ask` in `/etc/qubes-rpc/policy/qubes.Gpg`. For the examples given on this page:
+Um Qubes die standart SplitGPG-VM mitzuteilen kann die Datei `/etc/qubes-rpc/policy/qubes.Gpg` so geändert werden, dass in der letzten Zeile `,default_target=<SplitGPG-VM>` angehängt wird. Das qrexec Fenster wird dann den Namen der SplitGPG-VM voreingegeben enthalten. In unseren Beispiel würde dies folgendermaßen aussehen:
 
     @anyvm  @anyvm  ask,default_target=work-gpg
 
-Note that, because this makes it easier to accept Split GPG's qrexec authorization prompts, it may decrease security if the user is not careful in reviewing presented prompts. This may also be inadvisable if there are multiple AppVMs with Split GPG set up.
+Beachten sie bitte, dass diese Einstellung es zwar leichter macht die qrexec Anfragen zu aktzeptieren, aber gleichzeitig es auch die Sicherheit verringern kann, wenn jede Anfrage nicht genau überprüft wird.
 
 ## Using Thunderbird ##
 
